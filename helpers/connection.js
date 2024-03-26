@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 //連線資料庫
 const connectDB = async () => {
     try {
-        await mongoose.connect(`mongodb://mongo:4vHJUlan19EC0fq6Q78MTwSd52r3VWZx@hnd1.clusters.zeabur.com:32479`);
+        await mongoose.connect(`mongodb://${process.env.DB_HOST}`);
         console.log("資料庫連線成功");
-    } catch (err) {
-        console.log("資料庫連線失敗");
-        console.log(err)
+        mongoose.connection.useDb(`${process.env.DB_NAME}`);
+        console.log(`使用資料庫：${process.env.DB_NAME}`);
+    } catch (error) {
+        console.log("資料庫錯誤");
+        console.error(error)
     }
 };
 
