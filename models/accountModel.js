@@ -7,13 +7,13 @@ const accountSchema = new mongoose.Schema({
   account: {
     type: String,
     required: [true, "請輸入帳號"],
+    unique: true
   },
   password: {
     type: String,
     required: [true, "請輸入密碼"],
   },
-});
-
+}, { timestamps: true });
 
 const Account = mongoose.model('account', accountSchema);
 

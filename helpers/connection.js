@@ -10,7 +10,7 @@ const connectDB = async () => {
         console.log(`使用資料庫：${process.env.DB_NAME}`);
     } catch (error) {
         console.log("資料庫錯誤");
-        console.error(error)
+        console.error(error);
     }
 };
 
