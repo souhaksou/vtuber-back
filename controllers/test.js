@@ -1,4 +1,4 @@
-const { Category, Subcategory, Article } = require('../models/testModel');
+const { Category, Subcategory, Article, Tag } = require('../models/testModel');
 
 const getC = async (req, res, next) => {
   try {
@@ -80,46 +80,6 @@ const createS = async (req, res, next) => {
   }
 };
 
-const getA = async (req, res, next) => {
-  try {
-    const result = await Article.find();
-    res.status(200).json({
-      success: true,
-      data: result
-    });
-  } catch (error) {
-    console.error(error);
-    error.message = error.message || '取得失敗';
-    next(error);
-  }
-};
-
-const createA = async (req, res, next) => {
-  try {
-    const { name, subcategoryId } = req.body;
-    // 檢查是否存在
-    const result = await Article.find({ name: name, subcategoryId: subcategoryId });
-    if (result.length > 0) {
-      const error = new Error();
-      error.statusCode = 400;
-      error.message = '已經存在';
-      throw error;
-    }
-    else {
-      const data = { name, subcategoryId };
-      await Article.create(data);
-      res.status(200).json({
-        success: true,
-        message: '新增成功',
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    error.message = error.message || '新增失敗';
-    next(error);
-  }
-};
-
 const getSC = async (req, res, next) => {
   try {
     const result = await Subcategory.find().populate('categoryId');
@@ -138,33 +98,31 @@ const getCS = async (req, res, next) => {
   try {
     // const result = await Category.find().populate('subcategories');
 
-
-    // 聚合管道
+    //聚合管道
     const pipeline = [
-      // 第一阶段：将小分类按大分类进行分组
       {
         $group: {
           _id: '$categoryId',
-          categoryName: { $first: '$categoryId' }, // 获取大分类的id
-          subcategories: { $push: '$name' }, // 将小分类名称添加到数组中
+          subcategories: { $push: { name: '$name', sid: '$_id' } },
         }
       },
-      // 第二阶段：将大分类名称填充到结果中
       {
         $lookup: {
-          from: 'categories', // 大分类模型的集合名称
-          localField: 'categoryName',
+          from: 'categories',
+          localField: '_id',
           foreignField: '_id',
           as: 'category'
         }
       },
-      // 第三阶段：重新格式化输出
       {
         $project: {
-          _id: 0, // 不显示默认的 _id 字段
-          categoryName: '$category.name', // 获取大分类名称
-          subcategories: 1, // 显示小分类数组
+          _id: 1,
+          categoryName: { $arrayElemAt: ['$category.name', 0] },
+          subcategories: 1,
         }
+      },
+      {
+        $sort: { 'categoryName': 1 }
       }
     ];
 
@@ -182,4 +140,132 @@ const getCS = async (req, res, next) => {
   }
 };
 
-module.exports = { getC, createC, getS, createS, getA, createA, getSC, getCS };
+const getT = async (req, res, next) => {
+  try {
+    const result = await Tag.find();
+    res.status(200).json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    console.error(error);
+    error.message = error.message || '取得失敗';
+    next(error);
+  }
+};
+
+const createT = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    // 檢查是否存在
+    const result = await Tag.find({ name: name });
+    if (result.length > 0) {
+      const error = new Error();
+      error.statusCode = 400;
+      error.message = '已經存在';
+      throw error;
+    }
+    else {
+      const data = { name };
+      await Tag.create(data);
+      res.status(200).json({
+        success: true,
+        message: '新增成功',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    error.message = error.message || '新增失敗';
+    next(error);
+  }
+};
+
+const getA = async (req, res, next) => {
+  try {
+    const result = await Article.find();
+    res.status(200).json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    console.error(error);
+    error.message = error.message || '取得失敗';
+    next(error);
+  }
+};
+
+const createA = async (req, res, next) => {
+  try {
+    const { name, tags } = req.body;
+    // 檢查是否存在
+    const result = await Article.find({ name: name });
+    if (result.length > 0) {
+      const error = new Error();
+      error.statusCode = 400;
+      error.message = '已經存在';
+      throw error;
+    }
+    else {
+      const data = { name, tags };
+      await Article.create(data);
+      res.status(200).json({
+        success: true,
+        message: '新增成功',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    error.message = error.message || '新增失敗';
+    next(error);
+  }
+};
+
+const getTA = async (req, res, next) => {
+  try {
+
+    //聚合管道
+    const pipeline = [
+      {
+        $unwind: '$tags'
+      },
+      {
+        $group: {
+          _id: '$tags',
+          articles: { $push: { name: '$name', aid: '$_id' } },
+        }
+      },
+      {
+        $lookup: {
+          from: 'tags',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'tag'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          tagName: { $arrayElemAt: ['$tag.name', 0] },
+          articles: 1,
+        }
+      },
+      {
+        $sort: { 'tagName': 1 }
+      }
+    ];
+
+    // 执行聚合操作
+    const result = await Article.aggregate(pipeline);
+
+    res.status(200).json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    console.error(error);
+    error.message = error.message || '取得失敗';
+    next(error);
+  }
+};
+
+module.exports = { getC, createC, getS, createS, getSC, getCS, getT, createT, getA, createA, getTA };

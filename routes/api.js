@@ -21,15 +21,6 @@ router.put('/banner', editBanner);
 router.delete('/banner', deleteBanner);
 
 // 測試
-const { getC, createC, getS, createS, getA, createA, getSC,getCS } = require('../controllers/test');
-router.get('/testc', getC);
-router.post('/testc', createC);
-router.get('/tests', getS);
-router.post('/tests', createS);
-router.get('/testa', getA);
-router.post('/testa', createA);
-router.get('/testsc', getSC);
-router.get('/testcs', getCS);
 
 // 錯誤處理
 router.use('/', errorHandler);
