@@ -6,6 +6,10 @@ const articleSchema = new mongoose.Schema({
         required: [true, "請輸入標題"],
         unique: true
     },
+    content: {
+        type: String,
+        default: ''
+    },
     subcategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subcategory',
@@ -15,21 +19,25 @@ const articleSchema = new mongoose.Schema({
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
     slug: {
         type: String,
-        required: [true, "請輸文章代稱"],
+        required: [true, "請輸入文章代稱"],
         unique: true
     },
     imgUrl: {
         type: String,
-    },
-    summary: {
-        type: String,
-    },
-    highlight: {
-        type: Boolean,
+        default: ''
     },
     blockquote: {
         type: String,
+        default: ''
     },
+    highlight: {
+        type: Boolean,
+        default: false
+    },
+    finished: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 // articleSchema.pre(/^find/, function (next) {

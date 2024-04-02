@@ -1,4 +1,4 @@
-const Banner = require('../models/bannerModel');
+const Banner = require('../../models/bannerModel');
 
 const getBanner = async (req, res, next) => {
     try {
@@ -76,7 +76,5 @@ const deleteBanner = async (req, res, next) => {
 };
 
 // 精選文章設定
-
-// 提供前端 banner 文章 直播 圖表
 
 module.exports = { getBanner, createBanner, editBanner, deleteBanner };

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dayjs = require('dayjs');
-const Account = require('../models/accountModel');
-const { hash, compare } = require('../helpers/bcrypt');
+const Account = require('../../models/accountModel');
+const { hash, compare } = require('../../helpers/bcrypt');
 
 const getAccount = async (req, res, next) => {
   try {
@@ -21,7 +21,7 @@ const createAccount = async (req, res, next) => {
   try {
     const { name, account, password } = req.body;
     // 檢查帳號是否存在
-    const result = await Account.find({ account: account });
+    const result = await Account.find({ account });
     if (result.length > 0) {
       const error = new Error();
       error.statusCode = 400;
@@ -93,7 +93,7 @@ const deleteAccount = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { account, password } = req.body;
-    const result = await Account.findOne({ account: account });
+    const result = await Account.findOne({ account });
     if (result === null) {
       const error = new Error();
       error.statusCode = 400;

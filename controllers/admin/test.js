@@ -1,4 +1,4 @@
-const { Category, Subcategory, Article, Tag } = require('../models/testModel');
+const { Category, Subcategory, Article, Tag } = require('../../models/testModel');
 
 const getC = async (req, res, next) => {
   try {
