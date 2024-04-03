@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { errorHandler } = require('../middleware/errorHandler');
-// const { verifyToken } = require('../middleware/verifyHandler');
+const { getCategory } = require('../controllers/api/article');
 
 // // 登入
 // router.post('/login', login);
@@ -18,7 +18,8 @@ const { errorHandler } = require('../middleware/errorHandler');
 // router.put('/banner', editBanner);
 // router.delete('/banner', deleteBanner);
 
-// // 文章
+// 文章
+router.get('/category', getCategory)
 // router.get('/tag', getTag);
 // router.post('/tag', createTag);
 // router.put('/tag', editTag);

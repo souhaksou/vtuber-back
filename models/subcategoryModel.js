@@ -12,14 +12,6 @@ const subcategorySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-subcategorySchema.pre(/^find/, function (next) {
-    this.populate({
-        path: 'categoryId',
-        model: 'Category'
-    });
-    next();
-});
-
 const Subcategory = mongoose.model('Subcategory', subcategorySchema);
 
 module.exports = Subcategory;

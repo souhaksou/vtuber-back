@@ -10,6 +10,11 @@ const articleSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
+        required: [true, "請輸入作者"]
+    },
     subcategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subcategory',
