@@ -17,9 +17,8 @@ const getSubcategory = async (req, res, next) => {
 const createSubcategory = async (req, res, next) => {
     try {
         const { name, categoryId } = req.body;
-        // 檢查帳號是否存在
-        const result = await Subcategory.find({ name, categoryId });
-        if (result.length > 0) {
+        const result = await Subcategory.findOne({ name, categoryId });
+        if (result !== null) {
             const error = new Error();
             error.statusCode = 400;
             error.message = 'subcategory 已經存在';
@@ -43,8 +42,8 @@ const createSubcategory = async (req, res, next) => {
 const editSubcategory = async (req, res, next) => {
     try {
         const { _id, name, categoryId } = req.body;
-        const check = await Subcategory.find({ name, categoryId });
-        if (check.length > 0) {
+        const check = await Subcategory.findOne({ name, categoryId });
+        if (check !== null) {
             const error = new Error();
             error.statusCode = 400;
             error.message = '相同的 subcategory 已經存在';

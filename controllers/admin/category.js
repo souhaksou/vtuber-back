@@ -16,17 +16,16 @@ const getCategory = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
     try {
-        const { name } = req.body;
-        // 檢查帳號是否存在
-        const result = await Category.find({ name });
-        if (result.length > 0) {
+        const { name, show } = req.body;
+        const result = await Category.findOne({ name });
+        if (result !== null) {
             const error = new Error();
             error.statusCode = 400;
             error.message = 'category 已經存在';
             throw error;
         }
         else {
-            const data = { name };
+            const data = { name, show };
             await Category.create(data);
             res.status(200).json({
                 success: true,
@@ -42,8 +41,8 @@ const createCategory = async (req, res, next) => {
 
 const editCategory = async (req, res, next) => {
     try {
-        const { _id, name } = req.body;
-        const data = { name };
+        const { _id, name, show } = req.body;
+        const data = { name, show };
         const result = await Category.findByIdAndUpdate(_id, { $set: data }, { new: true });
         if (result === null) {
             const error = new Error();

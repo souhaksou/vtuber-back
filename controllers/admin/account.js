@@ -5,7 +5,7 @@ const { hash, compare } = require('../../helpers/bcrypt');
 
 const getAccount = async (req, res, next) => {
   try {
-    const result = await Account.find();
+    const result = await Account.find({ name: { $ne: 'admin' } }, { _id: 1, name: 1, account: 1 });
     res.status(200).json({
       success: true,
       data: result
@@ -20,9 +20,8 @@ const getAccount = async (req, res, next) => {
 const createAccount = async (req, res, next) => {
   try {
     const { name, account, password } = req.body;
-    // 檢查帳號是否存在
-    const result = await Account.find({ account });
-    if (result.length > 0) {
+    const result = await Account.findOne({ account });
+    if (result !== null) {
       const error = new Error();
       error.statusCode = 400;
       error.message = '帳號已經存在';

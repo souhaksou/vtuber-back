@@ -17,9 +17,8 @@ const getTag = async (req, res, next) => {
 const createTag = async (req, res, next) => {
     try {
         const { name } = req.body;
-        // 檢查帳號是否存在
-        const result = await Tag.find({ name });
-        if (result.length > 0) {
+        const result = await Tag.findOne({ name });
+        if (result !== null) {
             const error = new Error();
             error.statusCode = 400;
             error.message = 'tag 已經存在';

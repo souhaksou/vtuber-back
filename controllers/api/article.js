@@ -21,6 +21,7 @@ const getCategory = async (req, res, next) => {
                 $project: {
                     _id: 1,
                     name: { $arrayElemAt: ['$category.name', 0] },
+                    show: { $arrayElemAt: ['$category.show', 0] },
                     subcategories: 1,
                 }
             },
