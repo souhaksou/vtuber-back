@@ -1,4 +1,5 @@
 const Category = require('../../models/categoryModel');
+const Subcategory = require('../../models/subcategoryModel');
 
 const getCategory = async (req, res, next) => {
     try {
@@ -16,7 +17,7 @@ const getCategory = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
     try {
-        const { name, show } = req.body;
+        const { name, show, subcategoryName, subcategoryShow } = req.body;
         const result = await Category.findOne({ name });
         if (result !== null) {
             const error = new Error();
@@ -25,8 +26,10 @@ const createCategory = async (req, res, next) => {
             throw error;
         }
         else {
-            const data = { name, show };
-            await Category.create(data);
+            const data1 = { name, show };
+            const c = await Category.create(data1);
+            const data2 = { name: subcategoryName, show: subcategoryShow, categoryId: c._id }
+            await Subcategory.create(data2);
             res.status(200).json({
                 success: true,
                 message: '新增 category 成功',
@@ -42,6 +45,13 @@ const createCategory = async (req, res, next) => {
 const editCategory = async (req, res, next) => {
     try {
         const { _id, name, show } = req.body;
+        // const check = await Category.findOne({ name });
+        // if (check !== null) {
+        //     const error = new Error();
+        //     error.statusCode = 400;
+        //     error.message = '相同的 category 已經存在';
+        //     throw error;
+        // }
         const data = { name, show };
         const result = await Category.findByIdAndUpdate(_id, { $set: data }, { new: true });
         if (result === null) {
@@ -72,6 +82,7 @@ const deleteCategory = async (req, res, next) => {
             error.message = 'category 不存在';
             throw error;
         } else {
+            await Subcategory.deleteMany({ categoryId: result._id });
             res.status(200).json({
                 success: true,
                 message: '刪除 category 成功'

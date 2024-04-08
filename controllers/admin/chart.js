@@ -75,4 +75,18 @@ const deleteChart = async (req, res, next) => {
     }
 };
 
-module.exports = { getChart, createChart, editChart, deleteChart };
+const getActiveChart = async (req, res, next) => {
+    try {
+        const result = await Chart.find({}, { _id: 1, name: 1, chartUrl: 1, highlight: 1 });
+        res.status(200).json({
+            success: true,
+            data: result
+        });
+    } catch (error) {
+        console.error(error);
+        error.message = error.message || 'chart 取得失敗';
+        next(error);
+    }
+};
+
+module.exports = { getChart, createChart, editChart, deleteChart, getActiveChart };

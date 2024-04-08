@@ -6,7 +6,7 @@ const getCategory = async (req, res, next) => {
             {
                 $group: {
                     _id: '$categoryId',
-                    subcategories: { $push: { name: '$name', _id: '$_id' } },
+                    subcategories: { $push: { name: '$name', show: '$show', _id: '$_id' } },
                 }
             },
             {
@@ -37,7 +37,7 @@ const getCategory = async (req, res, next) => {
         });
     } catch (error) {
         console.error(error);
-        error.message = error.message || 'subcategory 取得失敗';
+        error.message = error.message || '分類取得失敗';
         next(error);
     }
 };

@@ -41,7 +41,7 @@ const createFeatured = async (req, res, next) => {
 
 const editFeatured = async (req, res, next) => {
     try {
-        const { _id, name, text } = req.body;
+        const { _id, text } = req.body;
         const data = { text };
         const result = await Featured.findByIdAndUpdate(_id, { $set: data }, { new: true });
         if (result === null) {

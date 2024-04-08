@@ -16,7 +16,7 @@ const getSubcategory = async (req, res, next) => {
 
 const createSubcategory = async (req, res, next) => {
     try {
-        const { name, categoryId } = req.body;
+        const { name, show, categoryId } = req.body;
         const result = await Subcategory.findOne({ name, categoryId });
         if (result !== null) {
             const error = new Error();
@@ -25,7 +25,7 @@ const createSubcategory = async (req, res, next) => {
             throw error;
         }
         else {
-            const data = { name, categoryId };
+            const data = { name, show, categoryId };
             await Subcategory.create(data);
             res.status(200).json({
                 success: true,
@@ -41,15 +41,15 @@ const createSubcategory = async (req, res, next) => {
 
 const editSubcategory = async (req, res, next) => {
     try {
-        const { _id, name, categoryId } = req.body;
-        const check = await Subcategory.findOne({ name, categoryId });
-        if (check !== null) {
-            const error = new Error();
-            error.statusCode = 400;
-            error.message = '相同的 subcategory 已經存在';
-            throw error;
-        }
-        const data = { name, categoryId };
+        const { _id, name, show } = req.body;
+        // const check = await Subcategory.findOne({ name, show,categoryId });
+        // if (check !== null) {
+        //     const error = new Error();
+        //     error.statusCode = 400;
+        //     error.message = '相同的 subcategory 已經存在';
+        //     throw error;
+        // }
+        const data = { name, show };
         const result = await Subcategory.findByIdAndUpdate(_id, { $set: data }, { new: true });
         if (result === null) {
             const error = new Error();
@@ -91,4 +91,45 @@ const deleteSubcategory = async (req, res, next) => {
     }
 };
 
-module.exports = { getSubcategory, createSubcategory, editSubcategory, deleteSubcategory };
+const getJoinCategory = async (req, res, next) => {
+    try {
+        const pipeline = [
+            {
+                $group: {
+                    _id: '$categoryId',
+                    subcategories: { $push: { name: '$name', show: '$show', _id: '$_id' } },
+                }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: { $arrayElemAt: ['$category.name', 0] },
+                    show: { $arrayElemAt: ['$category.show', 0] },
+                    subcategories: 1,
+                }
+            },
+            {
+                $sort: { 'name': 1 }
+            }
+        ];
+        const result = await Subcategory.aggregate(pipeline);
+        res.status(200).json({
+            success: true,
+            data: result
+        });
+    } catch (error) {
+        console.error(error);
+        error.message = error.message || '分類取得失敗';
+        next(error);
+    }
+};
+
+module.exports = { getSubcategory, createSubcategory, editSubcategory, deleteSubcategory, getJoinCategory };

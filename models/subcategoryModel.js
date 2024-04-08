@@ -5,6 +5,10 @@ const subcategorySchema = new mongoose.Schema({
         type: String,
         required: [true, "請輸入子分類"],
     },
+    show: {
+        type: String,
+        default: ''
+    },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',

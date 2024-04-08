@@ -4,11 +4,11 @@ const { errorHandler } = require('../middleware/errorHandler');
 const { verifyToken } = require('../middleware/verifyHandler');
 const { getAccount, createAccount, editAccount, deleteAccount, login } = require('../controllers/admin/account');
 const { getBanner, createBanner, editBanner, deleteBanner } = require('../controllers/admin/banner');
-const { getChart, createChart, editChart, deleteChart } = require('../controllers/admin/chart');
+const { getChart, createChart, editChart, deleteChart, getActiveChart } = require('../controllers/admin/chart');
 const { getFeatured, createFeatured, editFeatured, deleteFeatured } = require('../controllers/admin/featured');
 const { getTag, createTag, editTag, deleteTag } = require('../controllers/admin/tag');
 const { getCategory, createCategory, editCategory, deleteCategory } = require('../controllers/admin/category');
-const { getSubcategory, createSubcategory, editSubcategory, deleteSubcategory } = require('../controllers/admin/subcategory');
+const { getSubcategory, createSubcategory, editSubcategory, deleteSubcategory, getJoinCategory } = require('../controllers/admin/subcategory');
 const { getArticle, createArticle, editArticle, deleteArticle } = require('../controllers/admin/article');
 const { getSeo, createSeo, editSeo, deleteSeo } = require('../controllers/admin/seo');
 
@@ -32,6 +32,7 @@ router.get('/chart', verifyToken, getChart);
 router.post('/chart', verifyToken, createChart);
 router.put('/chart', verifyToken, editChart);
 router.delete('/chart', verifyToken, deleteChart);
+router.get('/chart', verifyToken, getActiveChart);
 
 //精選
 router.get('/featured', verifyToken, getFeatured);
@@ -40,28 +41,29 @@ router.put('/featured', verifyToken, editFeatured);
 router.delete('/featured', verifyToken, deleteFeatured);
 
 // tag
-router.get('/tag', getTag);
-router.post('/tag', createTag);
-router.put('/tag', editTag);
-router.delete('/tag', deleteTag);
+router.get('/tag', verifyToken, getTag);
+router.post('/tag', verifyToken, createTag);
+router.put('/tag', verifyToken, editTag);
+router.delete('/tag', verifyToken, deleteTag);
 
 // category
-router.get('/category', getCategory);
-router.post('/category', createCategory);
-router.put('/category', editCategory);
-router.delete('/category', deleteCategory);
+router.get('/category', verifyToken, getCategory);
+router.post('/category', verifyToken, createCategory);
+router.put('/category', verifyToken, editCategory);
+router.delete('/category', verifyToken, deleteCategory);
 
 // subcategory
-router.get('/subcategory', getSubcategory);
-router.post('/subcategory', createSubcategory);
-router.put('/subcategory', editSubcategory);
-router.delete('/subcategory', deleteSubcategory);
+router.get('/subcategory', verifyToken, getSubcategory);
+router.post('/subcategory', verifyToken, createSubcategory);
+router.put('/subcategory', verifyToken, editSubcategory);
+router.delete('/subcategory', verifyToken, deleteSubcategory);
 
 // 文章
-router.get('/article', getArticle);
-router.post('/article', createArticle);
-router.put('/article', editArticle);
-router.delete('/article', deleteArticle);
+router.get('/joincategory', verifyToken, getJoinCategory);
+router.get('/article', verifyToken, getArticle);
+router.post('/article', verifyToken, createArticle);
+router.put('/article', verifyToken, editArticle);
+router.delete('/article', verifyToken, deleteArticle);
 
 // seo
 router.get('/seo', verifyToken, getSeo);
