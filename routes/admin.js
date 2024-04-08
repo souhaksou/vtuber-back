@@ -4,7 +4,7 @@ const { errorHandler } = require('../middleware/errorHandler');
 const { verifyToken } = require('../middleware/verifyHandler');
 const { getAccount, createAccount, editAccount, deleteAccount, login } = require('../controllers/admin/account');
 const { getBanner, createBanner, editBanner, deleteBanner } = require('../controllers/admin/banner');
-const { getChart, createChart, editChart, deleteChart, getActiveChart } = require('../controllers/admin/chart');
+const { getChart, createChart, editChart, deleteChart, getActiveChart, editActiveChart } = require('../controllers/admin/chart');
 const { getFeatured, createFeatured, editFeatured, deleteFeatured } = require('../controllers/admin/featured');
 const { getTag, createTag, editTag, deleteTag } = require('../controllers/admin/tag');
 const { getCategory, createCategory, editCategory, deleteCategory } = require('../controllers/admin/category');
@@ -32,7 +32,8 @@ router.get('/chart', verifyToken, getChart);
 router.post('/chart', verifyToken, createChart);
 router.put('/chart', verifyToken, editChart);
 router.delete('/chart', verifyToken, deleteChart);
-router.get('/chart', verifyToken, getActiveChart);
+router.get('/activeChart', verifyToken, getActiveChart);
+router.put('/activeChart', verifyToken, editActiveChart);
 
 //精選
 router.get('/featured', verifyToken, getFeatured);

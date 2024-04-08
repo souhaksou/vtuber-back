@@ -3,6 +3,7 @@ const Article = require('../../models/articleModel');
 const getArticle = async (req, res, next) => {
     try {
         const result = await Article.find();
+        // {}, { _id: 1, bannerUrl: 1 }
         res.status(200).json({
             success: true,
             data: result

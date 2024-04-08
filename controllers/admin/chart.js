@@ -89,4 +89,27 @@ const getActiveChart = async (req, res, next) => {
     }
 };
 
-module.exports = { getChart, createChart, editChart, deleteChart, getActiveChart };
+const editActiveChart = async (req, res, next) => {
+    try {
+        const { _id, highlight } = req.body;
+        const data = { highlight };
+        const result = await Chart.findByIdAndUpdate(_id, { $set: data }, { new: true });
+        if (result === null) {
+            const error = new Error();
+            error.statusCode = 400;
+            error.message = 'chart 不存在';
+            throw error;
+        } else {
+            res.status(200).json({
+                success: true,
+                message: '編輯 chart 成功',
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        error.message = error.message || '編輯 chart 失敗';
+        next(error);
+    }
+};
+
+module.exports = { getChart, createChart, editChart, deleteChart, getActiveChart, editActiveChart };
