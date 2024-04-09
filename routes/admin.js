@@ -9,7 +9,7 @@ const { getFeatured, createFeatured, editFeatured, deleteFeatured } = require('.
 const { getTag, createTag, editTag, deleteTag } = require('../controllers/admin/tag');
 const { getCategory, createCategory, editCategory, deleteCategory } = require('../controllers/admin/category');
 const { getSubcategory, createSubcategory, editSubcategory, deleteSubcategory, getJoinCategory } = require('../controllers/admin/subcategory');
-const { getArticle, createArticle, editArticle, deleteArticle } = require('../controllers/admin/article');
+const { getArticle, createArticle, editArticle, deleteArticle, getOneArticle, getActiveArticle, createActiveArticle, editActiveArticle, deleteActiveArticle } = require('../controllers/admin/article');
 const { getSeo, createSeo, editSeo, deleteSeo } = require('../controllers/admin/seo');
 
 // 登入
@@ -65,6 +65,11 @@ router.get('/article', verifyToken, getArticle);
 router.post('/article', verifyToken, createArticle);
 router.put('/article', verifyToken, editArticle);
 router.delete('/article', verifyToken, deleteArticle);
+router.post('/oneArticle', verifyToken, getOneArticle);
+router.get('/activeArticle', verifyToken, getActiveArticle);
+router.post('/activeArticle', verifyToken, createActiveArticle);
+router.put('/activeArticle', verifyToken, editActiveArticle);
+router.delete('/activeArticle', verifyToken, deleteActiveArticle);
 
 // seo
 router.get('/seo', verifyToken, getSeo);

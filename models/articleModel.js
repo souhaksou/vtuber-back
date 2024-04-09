@@ -33,6 +33,10 @@ const articleSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    text: {
+        type: String,
+        required: [true, "請輸入內容"]
+    },
     highlight: {
         type: Boolean,
         default: false

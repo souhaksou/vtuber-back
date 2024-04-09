@@ -1,29 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const { errorHandler } = require('../middleware/errorHandler');
-const { getCategory } = require('../controllers/api/article');
+const { getHome } = require('../controllers/api/home');
+const { getFeatured } = require('../controllers/api/featured');
+const { getArticle, getSlugArticle } = require('../controllers/api/article');
+const { getChart } = require('../controllers/api/chart');
 
-// // 登入
-// router.post('/login', login);
-
-// // 帳號
-// router.get('/account', getAccount);
-// router.post('/account', createAccount);
-// router.put('/account', editAccount)
-// router.delete('/account', deleteAccount);
-
-// // 首頁
-// router.get('/banner', getBanner);
-// router.post('/banner', createBanner);
-// router.put('/banner', editBanner);
-// router.delete('/banner', deleteBanner);
+//首頁
+// banner
+router.get('/home', getHome);
 
 // 文章
-router.get('/category', getCategory)
-// router.get('/tag', getTag);
-// router.post('/tag', createTag);
-// router.put('/tag', editTag);
-// router.delete('/tag', deleteTag);
+// 精選
+router.get('/featured', getFeatured);
+// articles
+router.get('/article', getArticle);
+router.post('/article', getSlugArticle);
+
+// 圖表
+router.get('/chart', getChart);
 
 // 錯誤處理
 router.use('/', errorHandler);

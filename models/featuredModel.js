@@ -12,6 +12,6 @@ const featuredSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const Featured = mongoose.model('featured', featuredSchema);
+const Featured = mongoose.model('Featured', featuredSchema);
 
 module.exports = Featured;
